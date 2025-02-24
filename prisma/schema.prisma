@@ -1,0 +1,75 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String    @id @default(uuid())
+  email           String    @unique
+  name            String
+  password        String
+  role            String    @default("USER")
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  is2FAEnabled    Boolean   @default(false)
+  lastLoginAt     DateTime?
+  documents       Document[]
+  reports         Report[]
+  tickets         Ticket[]
+}
+
+model Document {
+  id          String    @id @default(uuid())
+  title       String
+  type        String
+  status      String    @default("PENDING")
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+  fileUrl     String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  expiresAt   DateTime?
+}
+
+model Report {
+  id          String    @id @default(uuid())
+  title       String
+  type        String
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+  status      String    @default("PENDING")
+  data        String    // JSON data
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  generatedAt DateTime?
+}
+
+model Ticket {
+  id          String    @id @default(uuid())
+  title       String
+  description String
+  status      String    @default("OPEN")
+  priority    String    @default("MEDIUM")
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  closedAt    DateTime?
+  messages    Message[]
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  content   String
+  ticketId  String
+  ticket    Ticket   @relation(fields: [ticketId], references: [id])
+  isStaff   Boolean  @default(false)
+  createdAt DateTime @default(now())
+}

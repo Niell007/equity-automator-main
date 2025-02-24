@@ -1,0 +1,3 @@
+employeeId,firstName,lastName,email,gender,ethnicity,position,department,startDate,status,salary
+EMP001,John,Doe,john.doe@example.com,male,caucasian,Software Engineer,IT,2024-01-01,ACTIVE,85000
+EMP002,Jane,Smith,jane.smith@example.com,female,asian,Product Manager,Operations,2024-01-15,ACTIVE,95000 
